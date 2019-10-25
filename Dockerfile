@@ -4,8 +4,6 @@
 
 FROM ubuntu:14.04
 
-MAINTAINER Eric Rasche <esr@tamu.edu>
-
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
@@ -71,10 +69,8 @@ ADD ./rserver.conf /etc/rstudio/rserver.conf
 # The Galaxy instance can copy in data that needs to be present to the Rstudio webserver
 RUN chmod +x /startup.sh && \
     Rscript /tmp/packages-gx.R && \
-    pip install git+https://github.com/bgruening/galaxy_ie_helpers@a4237aa8704938fd87a2a947b1269f34363c933b
-
-
-RUN groupadd -r rstudio -g 1450 && \
+    pip install galaxy-ie-helpers && \
+    groupadd -r rstudio -g 1450 && \
     useradd -u 1450 -r -g rstudio -d /import -c "RStudio User" \
         -p $(openssl passwd -1 rstudio) rstudio && \
     chown -R rstudio:rstudio /import
